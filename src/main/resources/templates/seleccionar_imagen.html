@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: head"></head>
+<body>
+
+	<header th:replace="navbar :: header"></header>
+
+	<ul class="nav justify-content-center sticky shadow bg-white rounded">
+		<li class="nav-item"><a class="nav-link prueba" th:href="@{'/edit/' + ${lista.id}}">Editar lista</a></li>
+		<li class="nav-item"><a class="nav-link prueba" th:href="@{'/buscar_media/' + ${lista.id}}">Añadir/eliminar</a></li>
+		<li class="nav-item"><a class="nav-link prueba" href="#">Seleccionar imagen</a></li>
+		<li class="nav-item"><a class="nav-link prueba" th:href="@{'/borrar/' + ${lista.id}}" tabindex="-1">Borrar lista</a></li>
+	</ul>
+	
+	<div class="alert alert-success" id="exito" style="visibility: hidden;">Imagen establecida como portada de la lista</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="card my-3 mx-4 shadow bg-white rounded"
+				th:each="detalle : ${detalle_lista}">
+				<a href="#"
+					th:onclick="addImgToList([[${lista.id}]], [[${detalle.backdrop_path}]], [[${request_token_valid}]]);return false;"><img id="ancho"
+					th:src="'https://image.tmdb.org/t/p/w500/' + ${detalle.backdrop_path}" /></a>
+
+			</div>
+		</div>
+	</div>
+
+
+	<footer th:replace="index :: footer"></footer>
+
+	<script th:inline="javascript" type="text/javascript">
+		function addImgToList(lista_id, backdrop_path, request_token_valid) {
+			$.ajax({
+				url : 'https://api.themoviedb.org/4/list/' + lista_id,
+				type : 'PUT',
+				dataType : 'json',
+				headers : {
+					'Authorization' : 'Bearer ' + request_token_valid,
+					'Content-Type' : 'application/json'
+				},
+				data : JSON.stringify({
+
+					backdrop_path : backdrop_path
+				}),
+				success: function() {
+					var added = document.getElementById("exito");
+					added.style.visibility = 'visible';
+					setTimeout(function() {
+				        $("#exito").fadeIn(1500);
+				    },1000);
+					setTimeout(function() {
+				        $("#exito").fadeOut(1500);
+				    },3000);
+				}
+			});
+		}
+	</script>
+</body>
+</html>

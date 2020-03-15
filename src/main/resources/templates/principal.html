@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: head"></head>
+<body>
+
+	<header th:replace="navbar :: header"></header>
+
+
+	<div class="my-3" id="principal" align="center">
+		<p><strong>Películas</strong></p>
+		<a th:href="@{listar_peliculas(pagina='1',consulta='')}"><img th:src="@{img/peliculas.jpg}" width="500" height="300" /></a>
+		<p class="my-3"><strong>Series</strong></p>
+		<a th:href="@{listar_series(pagina='1',consulta='')}"><img th:src="@{img/series.jpg}" width="500" height="300" /></a>
+	</div>
+
+	<footer th:replace="index :: footer"></footer>
+	
+</body>
+</html>

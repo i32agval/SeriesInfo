@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: head"></head>
+<body>
+
+	<div class="container my-3  col-sm-6">
+		<div class="card border-primary">
+			<div class="card-header">Introduce tus datos</div>
+			<div class="card-body">
+
+				<form th:action="@{/login}" method="post">
+
+					<div class="form-group">
+
+						<input type="text" name="username" id="username "
+							class="form-control" placeholder="Usuario" required />
+
+					</div>
+
+					<div class="form-group">
+
+						<input type="password" name="password" id="password"
+							class="form-control" placeholder="Password" required />
+
+					</div>
+
+					<div class="form-group">
+
+						<input type="submit" class="btn btn-lg btn-primary btn-block"
+							value="Entrar" />
+
+					</div>
+
+				</form>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="container my-3 col-sm-6">
+		<div class="card border-primary">
+			<div class="card-header">Entrar como Invitado</div>
+			<div class="card-body">
+
+				<div class="form-group">
+
+					<a class="btn btn-lg btn-primary btn-block"
+						th:href="@{'/invitado'}" role="button">Invitado</a>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="container my-3 col-sm-6">
+		<div class="card border-primary">
+			<div class="card-header">Regístrate</div>
+			<div class="card-body">
+
+				<div class="form-group">
+
+					<a class="btn btn-lg btn-primary btn-block"
+						th:href="@{'registration'}" role="button">Regístrate</a>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<footer th:replace="index :: footer"></footer>
+
+</body>
+</html>

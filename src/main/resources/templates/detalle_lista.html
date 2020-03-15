@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: head"></head>
+<body>
+
+	<header th:replace="navbar :: header"></header>
+
+	<ul class="nav justify-content-center sticky shadow bg-white rounded">
+		<li class="nav-item"><a class="nav-link"
+			th:href="@{'/edit/' + ${list_id}}">Editar lista</a></li>
+	</ul>
+
+	<div class="row">
+	<div class="grid container grid my-3">
+
+		<ul class="card img2 p-0 mx-0 shadow bg-white"
+			th:each="detalle : ${detalles}">
+			<a class="prueba" th:if="${detalle.media_type == 'movie'}"
+				th:href="@{'/detalle_pelicula/' + ${detalle.id}}"><li id="li"><img
+					class="float-left poster"
+					th:src="'https://image.tmdb.org/t/p/w200' + ${detalle.poster_path}" />
+					<b class="mx-3" th:text="${detalle.title}"></b>
+					<div class="info" th:text="${detalle.overview}"></div>
+						<img class="backdrop"
+							th:src="'https://image.tmdb.org/t/p/w400' + ${detalle.backdrop_path}" />
+					
+
+					</li></a>
+			<a class="prueba" th:if="${detalle.media_type == 'tv'}"
+				th:href="@{'/detalle_serie/' + ${detalle.id}}"><li id="li"><img
+					class="float-left poster"
+					th:src="'https://image.tmdb.org/t/p/w200' + ${detalle.poster_path}" />
+					<b class="mx-3" th:text="${detalle.original_name}"></b>
+					<div class="info" th:text="${detalle.overview}"></div>
+						<img class="backdrop"
+							th:src="'https://image.tmdb.org/t/p/w400' + ${detalle.backdrop_path}" />
+							
+					</li></a>
+		</ul>
+
+
+	</div>
+</div>
+
+	<footer th:replace="index :: footer"></footer>
+</body>
+</html>

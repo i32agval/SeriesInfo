@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: head"></head>
+<body>
+
+	<header th:replace="navbar :: header"></header>
+
+	<ul class="nav justify-content-center sticky shadow bg-white rounded">
+		<li class="nav-item"><a class="nav-link prueba"
+			th:href="@{'/edit/' + ${list_id}}">Editar lista</a></li>
+		<li class="nav-item"><a class="nav-link prueba" href="#">Añadir/eliminar</a></li>
+		<li class="nav-item"><a class="nav-link prueba"
+			th:href="@{'/seleccionar_imagen/' + ${list_id}}">Seleccionar
+				imagen</a></li>
+		<li class="nav-item"><a class="nav-link prueba"
+			href="#" tabindex="-1">Borrar lista</a></li>
+	</ul>
+	
+	<div class="container">
+		<p class="my-3">¿Estás seguro?</p>
+		<a th:href="@{'/borrar_confirm/' + ${id}}" class="btn btn-danger">Borrar</a>
+	</div>
+
+
+	<footer th:replace="index :: footer"></footer>
+</body>
+</html>

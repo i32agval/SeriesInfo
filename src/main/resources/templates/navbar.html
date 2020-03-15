@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: head"></head>
+<body>
+	<header th:fragment="header">
+
+		<div class="topnav" id="myTopnav">
+			<a href="/principal" class="active">Home</a> <a
+				th:href="@{/listar_peliculas(pagina='1',consulta='')}">Películas</a>
+			<a th:href="@{/listar_series(pagina='1',consulta='')}">Series</a>
+			<a th:if="${session.guest == 'registrado'}" th:href="@{/listas}">Mis
+				listas</a>
+			<div class="dropdown2" id="dropdown2" style="float: right;">
+				<button class="dropbtn">
+					Opciones <i class="fa fa-caret-down"></i>
+				</button>
+				<div class="dropdown2-content" style="z-index: 3;">
+					<a th:if="${session.guest == 'registrado'}"
+						th:href="@{'/logout'}">Cerrar Sesión</a> <a
+						th:if="${session.guest != 'registrado'}" th:href="@{'/login'}">Iniciar
+						Sesión</a>
+				</div>
+			</div>
+
+		</div>
+
+		<script>
+			/* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
+			function myFunction() {
+				var x = document.getElementById("myTopnav");
+				if (x.className === "topnav") {
+					x.className += " responsive";
+				} else {
+					x.className = "topnav";
+				}
+			}
+		</script>
+	</header>
+</body>
+</html>

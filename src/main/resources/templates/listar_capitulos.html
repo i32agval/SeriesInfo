@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: head"></head>
+<body>
+
+	<header th:replace="navbar :: header"></header>
+	
+	<div class="container">
+	<h2>Capítulos</h2>
+		<ul class="card img2 p-0 shadow bg-white rounded container" th:each="info : ${episodes}">
+			<li id="li"><img class="float-left mr-3" th:if="${info.still_path != null}" th:src="'https://image.tmdb.org/t/p/w130_and_h195_bestv2' + ${info.still_path}" >
+				<h4 th:text="${info.name}"></h4>
+				<p th:text="'Temporada: ' + ${info.season_number}"></p>
+				<p th:text="'Capítulo: ' + ${info.episode_number}"></p>
+				<p th:text="${info.overview}"></p>
+			</li>
+		</ul>
+	</div>
+
+</body>
+</html>

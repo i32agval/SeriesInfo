@@ -1,0 +1,6 @@
+com.restaurante.app
+com.seriesinfo.app
+com.seriesinfo.app.controllers
+com.seriesinfo.app.dao
+com.seriesinfo.app.entity
+com.seriesinfo.app.service

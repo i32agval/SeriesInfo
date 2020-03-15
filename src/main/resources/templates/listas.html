@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: head"></head>
+<body>
+
+	<header th:replace="navbar :: header"></header>
+
+	<ul class="nav justify-content-center sticky shadow bg-white rounded">
+		<li class="nav-item"><a class="nav-link" th:href="@{/create_list}">Crear lista</a></li>
+	</ul>
+	
+	<div class="alert alert-success" th:if="${mensaje != null}" th:text="${mensaje}"></div>
+	<div class="alert alert-success" th:if="${mensaje_borrar != null}" th:text="${mensaje_borrar}"></div>
+
+	<div class="container">
+		<div class="row">
+			<div class="card my-3 mx-4 shadow bg-white rounded" th:each="listado : ${resultList}">
+				<a class="prueba" th:href="@{'/detalle_lista/' + ${listado.id}}">
+				<img class="card-img-top" th:if="${listado.backdrop_path != null}"
+					th:src="'https://image.tmdb.org/t/p/w500/' + ${listado.backdrop_path}" />
+				<img class="card-img-top" th:if="${listado.backdrop_path == null}"
+					th:src="@{/img/sin_imagen.png}" style="height:280px; width: 500px;" /></a>
+				<div class="card-body">
+					<h3 class="card-text text-center" th:text="${listado.name}"></h3>
+					<p class="card-text text-center" th:if="${listado.number_of_items == 1}" th:text="${listado.number_of_items} + ' elemento'"></p>
+					<p class="card-text text-center" th:if="${listado.number_of_items > 1}" th:text="${listado.number_of_items} + ' elementos'"></p>
+					<p class="card-text text-center" th:if="${listado.number_of_items == 0}" th:text="'Lista vacía'"></p>
+				</div>
+			</div>
+		</div>
+
+	</div>
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+</body>
+</html>

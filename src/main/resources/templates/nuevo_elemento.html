@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: head"></head>
+<meta charset="utf-8">
+<link rel="stylesheet"
+	href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+
+<body>
+
+	<header th:replace="navbar :: header"></header>
+
+
+	<ul class="nav justify-content-center sticky shadow bg-white rounded">
+		<li class="nav-item"><a class="nav-link prueba"
+			th:href="@{'/edit/' + ${list_id}}">Editar lista</a></li>
+		<li class="nav-item"><a class="nav-link prueba" href="#">Añadir/eliminar</a></li>
+		<li class="nav-item"><a class="nav-link prueba"
+			th:href="@{'/seleccionar_imagen/' + ${list_id}}">Seleccionar
+				imagen</a></li>
+		<li class="nav-item"><a class="nav-link prueba"
+			th:href="@{'/borrar/' + ${list_id}}" tabindex="-1">Borrar lista</a></li>
+	</ul>
+
+	<div class="alert alert-success sticky" id="exito" style="visibility: hidden;">Elemento añadido a la lista</div>
+	<div class="alert alert-danger sticky" id="fracaso" style="visibility: hidden;">Elemento eliminado de la lista</div>
+		
+	<div class="container my-3">
+		<div class="form-group">
+			<input class="form-control validate"
+				placeholder="Buscar serie o película" id="search_key" type="text">
+		</div>
+
+
+		<div class="box">
+			<div class="container" id="listado"
+				style="overflow-y: scroll; visibility: hidden; height: 500px; margin-top: 20px; margin-left: -50px">
+				<div class="form-group center">
+					<ul class="search-results" style="margin-left: -5px;"></ul>
+				</div>
+			</div>
+
+
+			<div class="container" id="contenido" style="max-height: 300px;">
+				<h3 style="margin-top:-10%;">Contenido de la lista</h3>
+				<div class="form-group">
+					<ul class="results py-2" style="margin-top: 5%;">
+						<li id="li" th:each="elemento : ${detalle_lista}"
+							th:media_type="${elemento.media_type}"
+							th:media_id="${elemento.id}" th:list_id="${list_id}"><a
+							th:if="${elemento.media_type == 'movie'}"
+							th:href="@{'/detalle_pelicula/' + ${elemento.id}}"><img
+								id="${elemento.id}" class="mx-2"
+								style="width: 50px; float: left;"
+								th:src="'https://image.tmdb.org/t/p/w300/' + ${elemento.poster_path}"></img></a>
+							<a th:if="${elemento.media_type == 'tv'}"
+							th:href="@{'/detalle_serie/' + ${elemento.id}}"> <img
+								id="${elemento.id}" class="mx-2"
+								style="width: 50px; float: left;"
+								th:src="'https://image.tmdb.org/t/p/w300/' + ${elemento.poster_path}"></img></a>
+							<p id="${elemento.id}" th:if="${elemento.name != null}"
+								th:text="${elemento.name}"></p>
+							<p id="${elemento.id}" th:if="${elemento.title != null}"
+								th:text="${elemento.title}"></p> <span style="float: right;"><a
+								class="eliminar" href="#"><img class="mx-3"
+									style="margin-top: -30px;" src="/img/del.png" /></a></span><br> <br> <br> <br></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<input id="api_key" type="hidden" th:value="${api_key}" name="api_key"></input>
+	<input id="request_token_valid" type="hidden"
+		th:value="${request_token_valid}" name="request_token_valid"></input>
+
+
+
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script th:inline="javascript" type="text/javascript">
+
+	var elementos = document.getElementById("search_key");
+    var lista = document.getElementById("listado");
+    var list_id = document.getElementById("list_id");
+    var api_key = document.getElementById("api_key").value;
+    var request_token_valid = document.getElementById("request_token_valid").value;
+    lista.style.visibility = 'visible';
+
+    // Carga lista izquierda al cargar la página ****************************************************************************************
+    window.onload = function cargarBusqueda() {
+    $.getJSON('https://api.themoviedb.org/3/search/multi?api_key=' + api_key + '&language=es-ES&query=a', function(data) {
+ 		// go over all values
+  		for (var i = 0; i < data.results.length; i++) {
+  			if (data.results[i].media_type != 'person'){
+  				var imagen = 'https://image.tmdb.org/t/p/w500/' + data.results[i].poster_path;
+    			var title = data.results[i].title || data.results[i].name;
+    			var type = data.results[i].media_type;
+    			
+    			if (type === 'movie') {
+    				var link = "/detalle_pelicula/";
+    				type = 'Película';
+    			} else {
+    				var link = "/detalle_serie/";
+    				type = 'Serie';
+    			}
+    			var elem = 
+    				'<li id = "li"><a class="prueba" href="' + link + data.results[i].id + '" target="_blank"> <img class="mx-3" style="width: 50px; float:left;" src="' + imagen + '"></img></a><div><a class="prueba" href="#" onclick="addItemToList(\'[[${list_id}]]\',\'' + data.results[i].media_type + '\',\'' + data.results[i].id + '\',\'' + title + '\',\'' + imagen + '\');return false;"><span style="float:right"><img style="margin-top: 20px;" src="/img/add.png" /></span></a>' + title + '<p> ' + type + '</p><br><br></div></li>';
+    				$('ul.search-results').append(elem);
+				}
+  		}
+		})
+    }
+    // **********************************************************************************************************************************
+    
+    
+    // Carga la lista de la izquierda cuando no buscamos nada ***************************************************************************
+    //lista.style.visibility = 'hidden';
+  	elementos.addEventListener('keyup', ($elementos) => { 
+  		
+		$('ul.search-results').empty();
+		if (elementos.value.length === 0) {
+			// elementos.value = 'a';
+	    	// lista.style.visibility = 'hidden';
+	    	$.getJSON('https://api.themoviedb.org/3/search/multi?api_key=' + api_key + '&language=es-ES&query=a', function(data) {
+	     		// go over all values
+	      		for (var i = 0; i < data.results.length; i++) {
+	      			if (data.results[i].media_type != 'person'){
+	      				var imagen = 'https://image.tmdb.org/t/p/w500/' + data.results[i].poster_path;
+	        			var title = data.results[i].title || data.results[i].name;
+	        			var type = data.results[i].media_type;
+	        			
+	        			if (type === 'movie') {
+	        				var link = "/detalle_pelicula/";
+	        				type = 'Película';
+	        			} else {
+	        				var link = "/detalle_serie/";
+	        				type = 'Serie';
+	        			}
+	        			
+	        			var elem = 
+	        				'<li id = "li"><a class="prueba" href="' + link + data.results[i].id + '" target="_blank"> <img class="mx-3" style="width: 50px; float:left;" src="' + imagen + '"></img></a><div><a class="prueba" href="#" onclick="addItemToList(\'[[${list_id}]]\',\'' + data.results[i].media_type + '\',\'' + data.results[i].id + '\',\'' + title + '\',\'' + imagen + '\');return false;"><span style="float:right"><img style="margin-top: 20px;" src="/img/add.png" /></span></a>' + title + '<p> ' + type + '</p><br></div></li>';
+	        				$('ul.search-results').append(elem);
+       				}
+	      		}
+	  		})
+		} else {
+		// Carga la lista de la izquierda cuando buscamos algo **************************************************************************
+			lista.style.visibility = 'visible';
+			
+	  		$.getJSON('https://api.themoviedb.org/3/search/multi?api_key=' + api_key + '&language=es-ES&query=' + elementos.value, function(data) {
+	     		// go over all values
+	      		for (var i = 0; i < data.results.length; i++) {
+	      			if (data.results[i].media_type != 'person'){
+	      				var imagen = 'https://image.tmdb.org/t/p/w500/' + data.results[i].poster_path;
+	        			var title = data.results[i].title || data.results[i].name;
+	        			var type = data.results[i].media_type;
+	        			
+	        			if (type === 'movie') {
+	        				var link = "/detalle_pelicula/";
+	        				type = 'Película';
+	        			} else {
+	        				var link = "/detalle_serie/";
+	        				type = 'Serie';
+	        			}
+	        			var elem = 
+	        				'<li id = "li"><a class="prueba" href="' + link + data.results[i].id + '" target="_blank"> <img class="mx-3" style="width: 50px; float:left;" src="' + imagen + '"></img></a><div><a class="prueba" href="#" onclick="addItemToList(\'[[${list_id}]]\',\'' + data.results[i].media_type + '\',\'' + data.results[i].id + '\',\'' + title + '\',\'' + imagen + '\');return false;"><span style="float:right"><img style="margin-top: 20px;" src="/img/add.png" /></span></a>' + title + '<p> ' + type + '</p><br></div></li>';
+	        				$('ul.search-results').append(elem);
+       				}
+	      		}
+	  		})
+	  	}
+	});
+  	// **********************************************************************************************************************************
+  	
+//   	function exists(x, type, id, title, imagen) {
+//   		$.ajax({
+// 			url : 'https://api.themoviedb.org/4/list/' + x + '/item_status?media_id=' + id + '&media_type=' + type,
+// 			type : 'GET',
+// 			dataType : 'json',
+// 			headers : {
+// 				'Authorization' : 'Bearer ' + request_token_valid,
+// 				'Content-Type' : 'application/json'
+// 			},
+// 			success: function(data) {
+// 				addItemToList(x, type, id, title, imagen);
+// 			} 
+// 		});
+  		
+//   	}
+  	
+	function addItemToList(x, type, id, title, imagen) {
+		$.ajax({
+				url : 'https://api.themoviedb.org/4/list/' + x + '/items',
+				type : 'POST',
+				dataType : 'json',
+				headers : {
+					'Authorization' : 'Bearer ' + request_token_valid,
+					'Content-Type' : 'application/json'
+				},
+				data : JSON.stringify({
+					items : [ {
+						media_type : type,
+						media_id : id
+					} ]
+				}),
+				success: function(datos) {
+					// $('html, body').animate({scrollTop:0}, 'slow');
+					if (datos.results[0].success === true) {
+						$('ul.results').append('<div id="' + id + '"><img class="mx-2" style="width: 50px; float:left;" src="' + imagen + '"></img><p>' + title + '</p><span style="float:right;"><a href="#" onclick="$(\'#' + id + '\').remove();deleteItemFromList(\'' + x + '\',\'' + type + '\',\'' + id + '\')"><img class="mx-3" style="margin-top:-25px;" src="/img/del.png" /></a></span><br><br><br></div>');
+						var added = document.getElementById("exito");
+						added.style.visibility = 'visible';
+						setTimeout(function() {
+					        $("#exito").fadeIn(1500);
+					    },1000);
+						setTimeout(function() {
+					        $("#exito").fadeOut(1500);
+					    },3000);
+					}
+				} 
+			});
+	}
+    $("ul.results").on('click', 'span a.eliminar', function(e) {
+        var parent_element = $(this).closest('li');
+		var type = parent_element.attr('media_type');
+		var id = parent_element.attr('media_id');
+		var list_id = parent_element.attr('list_id');
+
+		parent_element.remove();
+		
+		var deleted = document.getElementById("fracaso");
+		deleted.style.visibility = 'visible';
+		setTimeout(function() {
+	        $("#fracaso").fadeIn(1500);
+	    },1000);
+		setTimeout(function() {
+	        $("#fracaso").fadeOut(1500);
+	    },3000);
+
+		$.ajax({
+				url : 'https://api.themoviedb.org/4/list/' + list_id + '/items',
+				type : 'DELETE',
+				dataType : 'json',
+				headers : {
+					'Authorization' : 'Bearer ' + request_token_valid,
+					'Content-Type' : 'application/json'
+				},
+				data : JSON.stringify({
+					items : [ {
+						media_type : type,
+						media_id : id
+					} ]
+				}),
+			});
+    });
+    
+    function deleteItemFromList(x, type, id) {
+
+
+		
+		var deleted = document.getElementById("fracaso");
+		deleted.style.visibility = 'visible';
+		setTimeout(function() {
+	        $("#fracaso").fadeIn(1500);
+	    },1000);
+		setTimeout(function() {
+	        $("#fracaso").fadeOut(1500);
+	    },3000);
+
+		$.ajax({
+				url : 'https://api.themoviedb.org/4/list/' + x + '/items',
+				type : 'DELETE',
+				dataType : 'json',
+				headers : {
+					'Authorization' : 'Bearer ' + request_token_valid,
+					'Content-Type' : 'application/json'
+				},
+				data : JSON.stringify({
+					items : [ {
+						media_type : type,
+						media_id : id
+					} ]
+				}),
+			});
+    }
+	
+
+</script>
+
+	<!-- 	<footer th:replace="index :: footer"></footer> -->
+</body>
+</html>

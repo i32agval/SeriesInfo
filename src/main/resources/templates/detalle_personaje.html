@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: head"></head>
+<body>
+
+	<header th:replace="navbar :: header"></header>
+
+	<ul class="nav justify-content-center sticky shadow">
+		<li class="nav-item"><a class="nav-link" href="#">Biografía</a></li>
+		<li class="nav-item"><a class="nav-link" href="#informacion">Información
+				personal</a></li>
+		<li class="nav-item"><a class="nav-link" href="#trabajos">Trabajos</a></li>
+	</ul>
+
+	<div class="container">
+
+		<div class="row">
+
+			<div class="col-md-12">
+				<div class="container my-3 altura-div">
+					<img class="float-left my-4 rounded img-fluid "
+						style="padding-right: 40px;"
+						th:src="'https://image.tmdb.org/t/p/w300' + ${person.profile_path}" />
+
+					<div class="py-3">
+						<b th:text="${person.name}" style="font-size: 30px;"></b><br>
+						<br>
+
+						<div>
+							<p th:text="'Popularidad: ' + ${person.popularity}"></p>
+						</div>
+
+						<p th:text="${person.biography}"></p>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+	<div class="container" id="informacion">
+		<div class="row">
+			<div class="col-md-3">
+				<ul class="card my-3 shadow bg-white rounded">
+					<h5>Información personal</h5>
+					<p class="my-3">
+						<strong>Fecha de nacimiento</strong>
+					</p>
+					<p th:text="${#dates.format(person.birthday, 'dd MMMM yyyy')}"></p>
+					<p>
+						<strong>Lugar de nacimiento</strong>
+					</h4>
+					<p th:text="${person.place_of_birth}"></p>
+					<p>
+						<strong>Papel</strong>
+					</h4>
+					<p th:text="${person.known_for_department}"></p>
+				</ul>
+			</div>
+
+
+
+			<div class="col-md-8" id="trabajos">
+				<h5 class="my-3">Películas en las que ha
+					trabajado</h5>
+				<div class="row">
+					<div
+						class="card my-3 mx-4 shadow bg-white rounded"
+						th:if="${cast.poster_path != null}" th:each="cast : ${cast}"
+						id="pelis_actores">
+						<a class="prueba" th:href="@{'/detalle_pelicula/' + ${cast.id}}">
+							<img class="card-img-top"
+							th:src="'https://image.tmdb.org/t/p/w200' + ${cast.getPoster_path()}" />
+							<div class="card-body">
+								<b th:text="${cast.title}"></b>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+</html>

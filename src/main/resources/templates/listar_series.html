@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: head"></head>
+<body>
+
+	<header th:replace="navbar :: header"></header>
+
+	<div class="container">
+		<form action="/listar_series" method="get">
+			<div class="form-group">
+				<input type="text" name="consulta"
+					class="form-control my-3" placeholder="Buscar por título"/></div>
+			<div class="form-group">
+				<input class="btn btn-success btn-sm" type="submit"
+			value="Buscar" />
+			</div>
+		</form>
+	</div>
+
+	<div class="grid container columns">
+
+
+		<ul class="card img2 p-0 mx-0 shadow bg-white rounded"
+			th:each="resultado : ${result}">
+			<a class="prueba" th:href="@{'/detalle_serie/' + ${resultado.id}}"><li id="li"><img
+					class="float-left poster"
+					th:src="'https://image.tmdb.org/t/p/w200' + ${resultado.getPoster_path()}" />
+					<img
+					class="backdrop"
+					th:src="'https://image.tmdb.org/t/p/w300' + ${resultado.getBackdrop_path()}" />
+					<b class="mx-3" th:text="${resultado.getOriginal_name()}"></b>
+					<div class="info" th:text="${resultado.getOverview()}"></div></li></a>
+		</ul>
+
+	</div>
+
+<div class="text-center">
+	<ul class="pagination justify-content-center">
+<!-- 		<a class="prueba" th:if="${pagina} != 1" th:href="@{listar_series(pagina=${pagina-1})}"><span class="page-link">Anterior</span></a> <a class="prueba" th:if="${season.getTotal_pages() != pagina}" -->
+<!-- 			th:href="@{listar_series(pagina=${pagina+1})}"><span class="page-link">Siguiente</span></a> -->
+		
+<!-- 		<a class="prueba" th:if="${pagina != 1 AND consulta2 != ' '}" th:href="@{listar_series(pagina=${pagina-1},consulta=${consulta2})}"><span class="page-link">Anterior</span></a>  -->
+<!-- 		<a class="prueba" th:if="${season.getTotal_pages() != pagina AND consulta2 != ' '}" -->
+<!-- 			th:href="@{listar_series(pagina=${pagina+1},consulta=${consulta2})}"><span class="page-link">Siguiente</span></a> -->
+		
+		<a class="prueba" th:if="${pagina != 1}" th:href="@{listar_series(pagina=${pagina-1},consulta=${consulta2})}"><span class="page-link">Anterior</span></a> 
+		<a class="prueba" th:if="${season.getTotal_pages() != pagina}"
+			th:href="@{listar_series(pagina=${pagina+1},consulta=${consulta2})}"><span class="page-link">Siguiente</span></a>
+	<ul>
+</div>
+
+	<footer th:replace="index :: footer"></footer>
+</body>
+</html>

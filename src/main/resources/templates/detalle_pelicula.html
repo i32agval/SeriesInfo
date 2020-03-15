@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: head"></head>
+<body>
+
+	<header th:replace="navbar :: header"></header>
+
+	<ul class="nav justify-content-center sticky shadow bg-white rounded">
+		<li class="nav-item"><a class="nav-link" href="#">Resumen</a></li>
+		<li class="nav-item"><a class="nav-link" href="#actores">Actores</a></li>
+	</ul>
+
+	<input id="movieId" type="hidden" th:value="${movieDetail.id}"
+		name="movieId"></input>
+		
+	<div class="row">
+
+		<div class="col-md-12">
+			<div class="container my-3" id="fondo">
+				<img class="my-4 rounded img-fluid" id="imagen_detail"
+					style="padding-right: 40px;"
+					th:src="'https://image.tmdb.org/t/p/w300' + ${movieDetail.getPoster_path()}" />
+
+				<div class="py-3">
+					<b th:text="${movieDetail.getTitle()}" style="font-size: 30px;"></b>
+					<div th:if="${session.guest == 'registrado'}" class="dropdown">
+						<i style="cursor: pointer" onclick="myFunction()"
+							class="material-icons dropbtn">add_circle_outline</i>
+						<div id="myDropdown" class="dropdown-content">
+						<p class="mx-2" style="color:black;">Añadir a una lista:</p>
+							<a th:each="lists : ${resultList} " href="#"
+								th:onclick="addItemToList([[${lists.id}]], [[${request_token_valid}]]);return false;"
+								th:text="${lists.name}"></a>
+						</div>
+					</div>
+
+					<div>
+						<p th:text="'Puntuación: ' +  ${movieDetail.vote_average}"></p>
+					</div>
+
+					<p th:text="${movieDetail.overview}"></p>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="row container mx-5">
+
+			<h3 id="actores">Actores</h3>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="card my-3 mx-4 shadow bg-white rounded"
+					th:each="casting : ${cast}" th:if="${casting.profile_path != null}"
+					id="actores">
+					<a class="prueba"
+						th:href="@{'/detalle_personaje/' + ${casting.id}}"><img
+						class="card-img-top"
+						th:src="'https://image.tmdb.org/t/p/w200' + ${casting.getProfile_path()}"></a>
+					<div class="card-body">
+						<p class="card-text" th:text="${casting.name}"></p>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<footer th:replace="index :: footer"></footer>
+	<script th:inline="javascript" type="text/javascript">
+		function addItemToList(listId, request_token_valid) {
+			$
+					.ajax({
+						url : 'https://api.themoviedb.org/4/list/' + listId + '/items',
+						type : 'POST',
+						dataType : 'json',
+						headers : {
+							'Authorization' : 'Bearer ' + request_token_valid,
+							'Content-Type' : 'application/json'
+						},
+						data : JSON.stringify({
+							items : [ {
+								media_type : "movie",
+								media_id : $('#movieId').val()
+							} ]
+						}),
+					});
+		}
+		
+		/* When the user clicks on the button,
+		toggle between hiding and showing the dropdown content */
+		function myFunction() {
+			document.getElementById("myDropdown").classList.toggle("show");
+		}
+
+		// Close the dropdown menu if the user clicks outside of it
+		window.onclick = function(event) {
+			if (!event.target.matches('.dropbtn')) {
+				var dropdowns = document
+						.getElementsByClassName("dropdown-content");
+				var i;
+				for (i = 0; i < dropdowns.length; i++) {
+					var openDropdown = dropdowns[i];
+					if (openDropdown.classList.contains('show')) {
+						openDropdown.classList.remove('show');
+					}
+				}
+			}
+		}
+	</script>
+
+</body>
+</html>
