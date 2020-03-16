@@ -2,6 +2,8 @@
 
 Seriesinfo is a web application that shows information about series and movies.
 
+The languages used have been: Java, Spring framework, Javascript, Ajax, CSS, HTML5 as well as API access.
+
 To do this, it uses the Themoviedb API, from which it obtains the following information:
 
 List of movies.
