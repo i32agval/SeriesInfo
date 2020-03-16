@@ -50,8 +50,8 @@ Once registered in the application, we can access the following features:
 - List of personal lists. We can create personal lists, to which we will add series and movies according to our needs.
 - We can edit lists, changing their name and description, adding or removing content from them, selecting an image that identifies it (from among the movies or series in it) or removing the list completely.
 
-Use of javascript to add and remove movies and series from a list. We will have 2 lists:
-On the left a search engine to search for movies or series.
-On the right, the list of movies and series that make up the list.
+- Use of javascript to add and remove movies and series from a list. We will have 2 lists:
+  - On the left a search engine to search for movies or series.
+  - On the right, the list of movies and series that make up the list.
 
-When selecting a series or movie from the list on the left, it will be automatically added to the list on the right, being able to delete the ones we want and obtaining the results instantly.
+- When selecting a series or movie from the list on the left, it will be automatically added to the list on the right, being able to delete the ones we want and obtaining the results instantly.
